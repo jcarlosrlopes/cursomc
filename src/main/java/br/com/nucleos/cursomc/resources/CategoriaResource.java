@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,7 +42,7 @@ public class CategoriaResource {
       return ResponseEntity.created(uri).build();
    }
 
-   @DeleteMapping("{id}")
+   @DeleteMapping("/{id}")
    public ResponseEntity<Void> delete(@PathVariable Long id) {
       this.service.deletar(id);
       return ResponseEntity.noContent().build();
@@ -51,6 +53,17 @@ public class CategoriaResource {
       List<CategoriaDTO> categoriasList = this.service.listarTodos().stream().map(cat -> new CategoriaDTO(cat))
             .collect(Collectors.toList());
       return ResponseEntity.ok(categoriasList);
+   }
+
+   @GetMapping("/page")
+   public ResponseEntity<Page<CategoriaDTO>> findAllPageable(@RequestParam(defaultValue = "0") Integer page,
+         @RequestParam(defaultValue = "24") Integer size,
+         @RequestParam(defaultValue = "ASC") String direction,
+         @RequestParam(defaultValue = "nome") String orderBy) {
+
+      Page<CategoriaDTO> categoriaPaginada = this.service.buscarPaginado(page, size, direction, orderBy)
+            .map(cat -> new CategoriaDTO(cat));
+      return ResponseEntity.ok(categoriaPaginada);
    }
 
 }
