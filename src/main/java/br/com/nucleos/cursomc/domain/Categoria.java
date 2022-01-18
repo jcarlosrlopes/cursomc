@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import br.com.nucleos.cursomc.dto.CategoriaDTO;
+
 @Entity
 public class Categoria implements Serializable {
 
@@ -29,6 +31,10 @@ public class Categoria implements Serializable {
    public Categoria(Long id, String nome) {
       this.id = id;
       this.nome = nome;
+   }
+
+   public static Categoria fromDTO(CategoriaDTO dto) {
+      return new Categoria(dto.getId(), dto.getNome());
    }
 
    public Long getId() {

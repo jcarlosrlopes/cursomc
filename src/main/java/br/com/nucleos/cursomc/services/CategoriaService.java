@@ -32,6 +32,11 @@ public class CategoriaService {
       return this.repository.save(categoria);
    }
 
+   public Categoria update(Categoria categoria) {
+      buscar(categoria.getId());
+      return this.repository.save(categoria);
+   }
+
    public void deletar(Long id) {
       buscar(id);
 

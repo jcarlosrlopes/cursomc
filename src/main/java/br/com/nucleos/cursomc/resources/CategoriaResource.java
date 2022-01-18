@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +38,18 @@ public class CategoriaResource {
    }
 
    @PostMapping
-   public ResponseEntity<Void> insert(@RequestBody Categoria categoria) {
-      Categoria novaCategoria = this.service.criar(categoria);
+   public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO categoriaDTO) {
+      Categoria novaCategoria = this.service.criar(Categoria.fromDTO(categoriaDTO));
       URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(novaCategoria.getId())
             .toUri();
       return ResponseEntity.created(uri).build();
+   }
+
+   @PutMapping("/{id}")
+   public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO categoriaDTO, @PathVariable Long id) {
+      categoriaDTO.setId(id);
+      this.service.update(Categoria.fromDTO(categoriaDTO));
+      return ResponseEntity.noContent().build();
    }
 
    @DeleteMapping("/{id}")
