@@ -13,10 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nucleos.cursomc.domain.enums.TipoCliente;
+import br.com.nucleos.cursomc.dto.ClienteDTO;
 
 @Entity
 public class Cliente implements Serializable {
@@ -49,7 +51,7 @@ public class Cliente implements Serializable {
       this.nome = nome;
       this.email = email;
       this.cpfOuCnpj = cpfOuCnpj;
-      this.tipo = tipo.getCodigo();
+      this.tipo = tipo == null ? null : tipo.getCodigo();
    }
 
    public Long getId() {
@@ -139,6 +141,10 @@ public class Cliente implements Serializable {
       } else if (!id.equals(other.id))
          return false;
       return true;
+   }
+
+   public static Cliente fromDTO(ClienteDTO clienteDTO) {
+      return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
    }
 
 }

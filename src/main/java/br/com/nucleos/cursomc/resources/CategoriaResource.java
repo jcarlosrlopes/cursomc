@@ -48,7 +48,7 @@ public class CategoriaResource {
    @PutMapping("/{id}")
    public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO categoriaDTO, @PathVariable Long id) {
       categoriaDTO.setId(id);
-      this.service.update(Categoria.fromDTO(categoriaDTO));
+      this.service.atualizar(Categoria.fromDTO(categoriaDTO));
       return ResponseEntity.noContent().build();
    }
 
