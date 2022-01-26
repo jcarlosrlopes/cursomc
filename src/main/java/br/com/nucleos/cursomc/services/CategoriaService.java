@@ -33,7 +33,8 @@ public class CategoriaService {
    }
 
    public Categoria atualizar(Categoria categoria) {
-      buscar(categoria.getId());
+      Categoria categoriaBanco = buscar(categoria.getId());
+      updateData(categoriaBanco, categoria);
       return this.repository.save(categoria);
    }
 
@@ -54,6 +55,10 @@ public class CategoriaService {
    public Page<Categoria> buscarPaginado(Integer page, Integer size, String direction, String orderBy) {
       PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
       return this.repository.findAll(pageRequest);
+   }
+
+   private void updateData(Categoria categoriaBanco, Categoria categoria) {
+      categoriaBanco.setNome(categoria.getNome());
    }
 
 }
