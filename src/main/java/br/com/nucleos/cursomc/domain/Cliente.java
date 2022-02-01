@@ -13,12 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nucleos.cursomc.domain.enums.TipoCliente;
 import br.com.nucleos.cursomc.dto.ClienteDTO;
+import br.com.nucleos.cursomc.dto.ClienteNewDTO;
 
 @Entity
 public class Cliente implements Serializable {
@@ -145,6 +145,27 @@ public class Cliente implements Serializable {
 
    public static Cliente fromDTO(ClienteDTO clienteDTO) {
       return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
+   }
+
+   public static Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
+      Cliente newCliente = new Cliente(null, clienteNewDTO.getNome(), clienteNewDTO.getEmail(),
+            clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipo()));
+      Cidade cid = new Cidade(clienteNewDTO.getCidadeId(), null, null);
+      Endereco end = new Endereco(null, clienteNewDTO.getLogradouro(), clienteNewDTO.getNumero(),
+            clienteNewDTO.getComplemento(), clienteNewDTO.getBairro(), clienteNewDTO.getCep(), newCliente, cid);
+
+      newCliente.getEnderecos().add(end);
+      newCliente.getTelefones().add(clienteNewDTO.getTelefone1());
+
+      if (clienteNewDTO.getTelefone2() != null) {
+         newCliente.getTelefones().add(clienteNewDTO.getTelefone2());
+      }
+
+      if (clienteNewDTO.getTelefone3() != null) {
+         newCliente.getTelefones().add(clienteNewDTO.getTelefone3());
+      }
+
+      return newCliente;
    }
 
 }

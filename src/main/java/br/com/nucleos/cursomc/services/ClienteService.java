@@ -14,6 +14,7 @@ import br.com.nucleos.cursomc.domain.Cliente;
 import br.com.nucleos.cursomc.exceptions.DataIntegrityException;
 import br.com.nucleos.cursomc.exceptions.ObjectNotFoundException;
 import br.com.nucleos.cursomc.repositories.ClienteRepository;
+import br.com.nucleos.cursomc.repositories.EnderecoRepository;
 
 @Service
 public class ClienteService {
@@ -21,10 +22,20 @@ public class ClienteService {
    @Autowired
    private ClienteRepository repository;
 
+   @Autowired
+   private EnderecoRepository enderecoRepository;
+
    public Cliente buscar(Long id) {
       Optional<Cliente> cliente = this.repository.findById(id);
       return cliente.orElseThrow(() -> new ObjectNotFoundException(
             "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
+   }
+
+   public Cliente criar(Cliente novoCliente) {
+      novoCliente.setId(null);
+      novoCliente = this.repository.save(novoCliente);
+      this.enderecoRepository.saveAll(novoCliente.getEnderecos());
+      return novoCliente;
    }
 
    public Cliente atualizar(Cliente cliente) {
