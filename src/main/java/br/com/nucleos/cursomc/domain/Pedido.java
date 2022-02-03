@@ -1,6 +1,7 @@
 package br.com.nucleos.cursomc.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -94,6 +95,10 @@ public class Pedido implements Serializable {
 
    public void setItems(Set<ItemPedido> items) {
       this.items = items;
+   }
+
+   public BigDecimal getTotalPedido() {
+      return this.items.stream().map(ItemPedido::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
    }
 
    @Override
