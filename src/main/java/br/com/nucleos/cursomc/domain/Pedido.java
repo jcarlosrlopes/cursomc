@@ -37,7 +37,7 @@ public class Pedido implements Serializable {
    private Endereco enderecoEntrega;
 
    @OneToMany(mappedBy = "id.pedido")
-   private Set<ItemPedido> items = new HashSet<ItemPedido>();
+   private Set<ItemPedido> itens = new HashSet<ItemPedido>();
 
    public Pedido() {
    }
@@ -89,16 +89,16 @@ public class Pedido implements Serializable {
       this.enderecoEntrega = enderecoEntrega;
    }
 
-   public Set<ItemPedido> getItems() {
-      return items;
+   public Set<ItemPedido> getItens() {
+      return itens;
    }
 
-   public void setItems(Set<ItemPedido> items) {
-      this.items = items;
+   public void setItens(Set<ItemPedido> itens) {
+      this.itens = itens;
    }
 
    public BigDecimal getTotalPedido() {
-      return this.items.stream().map(ItemPedido::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+      return this.itens.stream().map(ItemPedido::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
    }
 
    @Override
