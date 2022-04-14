@@ -2,8 +2,12 @@ package br.com.nucleos.cursomc.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -124,6 +128,32 @@ public class Pedido implements Serializable {
       } else if (!id.equals(other.id))
          return false;
       return true;
+   }
+
+   @Override
+   public String toString() {
+      NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+      DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+
+      StringBuilder builder = new StringBuilder();
+      builder.append("Pedido Número: ");
+      builder.append(getId());
+      builder.append(", Instante: ");
+      builder.append(getInstante().format(df));
+      builder.append(", Cliente: ");
+      builder.append(getCliente().getNome());
+      builder.append(", Situação Pagamento: ");
+      builder.append(getPagamento().getEstado());
+      builder.append("\nDetalhes:\n");
+
+      for (ItemPedido ip : getItens()) {
+         builder.append(ip.toString());
+      }
+
+      builder.append("Valor total: ");
+      builder.append(nf.format(getTotalPedido()));
+
+      return builder.toString();
    }
 
 }

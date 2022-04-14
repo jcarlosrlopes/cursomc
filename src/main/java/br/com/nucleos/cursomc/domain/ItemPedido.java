@@ -2,6 +2,8 @@ package br.com.nucleos.cursomc.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -106,6 +108,23 @@ public class ItemPedido implements Serializable {
       } else if (!id.equals(other.id))
          return false;
       return true;
+   }
+
+   @Override
+   public String toString() {
+      NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+      StringBuilder builder = new StringBuilder();
+      builder.append(getProduto().getNome());
+      builder.append(", QTDE: ");
+      builder.append(getQuantidade());
+      builder.append(", Preço Unitário: ");
+      builder.append(nf.format(getPreco()));
+      builder.append(", Total: ");
+      builder.append(nf.format(getSubtotal()));
+      builder.append("\n");
+
+      return builder.toString();
    }
 
 }
