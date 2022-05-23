@@ -36,6 +36,9 @@ public class Cliente implements Serializable {
    private String cpfOuCnpj;
    private Integer tipo;
 
+   @JsonIgnore
+   private String senha;
+
    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
    private List<Endereco> enderecos = new ArrayList<Endereco>();
 
@@ -50,12 +53,13 @@ public class Cliente implements Serializable {
    public Cliente() {
    }
 
-   public Cliente(Long id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+   public Cliente(Long id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
       this.id = id;
       this.nome = nome;
       this.email = email;
       this.cpfOuCnpj = cpfOuCnpj;
       this.tipo = tipo == null ? null : tipo.getCodigo();
+      this.senha = senha;
    }
 
    public Long getId() {
@@ -96,6 +100,14 @@ public class Cliente implements Serializable {
 
    public void setTipo(TipoCliente tipo) {
       this.tipo = tipo.getCodigo();
+   }
+
+   public String getSenha() {
+      return senha;
+   }
+
+   public void setSenha(String senha) {
+      this.senha = senha;
    }
 
    public List<Endereco> getEnderecos() {
@@ -148,12 +160,12 @@ public class Cliente implements Serializable {
    }
 
    public static Cliente fromDTO(ClienteDTO clienteDTO) {
-      return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
+      return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null, null);
    }
 
    public static Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
       Cliente newCliente = new Cliente(null, clienteNewDTO.getNome(), clienteNewDTO.getEmail(),
-            clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipo()));
+            clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipo()), clienteNewDTO.getSenha());
       Cidade cid = new Cidade(clienteNewDTO.getCidadeId(), null, null);
       Endereco end = new Endereco(null, clienteNewDTO.getLogradouro(), clienteNewDTO.getNumero(),
             clienteNewDTO.getComplemento(), clienteNewDTO.getBairro(), clienteNewDTO.getCep(), newCliente, cid);

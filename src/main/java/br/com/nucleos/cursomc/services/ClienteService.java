@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.nucleos.cursomc.domain.Cliente;
@@ -25,6 +26,9 @@ public class ClienteService {
    @Autowired
    private EnderecoRepository enderecoRepository;
 
+   @Autowired
+   private BCryptPasswordEncoder passwordEncoder;
+
    public Cliente buscar(Long id) {
       Optional<Cliente> cliente = this.repository.findById(id);
       return cliente.orElseThrow(() -> new ObjectNotFoundException(
@@ -33,6 +37,7 @@ public class ClienteService {
 
    public Cliente criar(Cliente novoCliente) {
       novoCliente.setId(null);
+      novoCliente.setSenha(passwordEncoder.encode(novoCliente.getSenha()));
       novoCliente = this.repository.save(novoCliente);
       this.enderecoRepository.saveAll(novoCliente.getEnderecos());
       return novoCliente;
