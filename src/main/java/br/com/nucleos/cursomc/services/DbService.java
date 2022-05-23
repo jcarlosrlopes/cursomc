@@ -22,6 +22,7 @@ import br.com.nucleos.cursomc.domain.PagamentoCartao;
 import br.com.nucleos.cursomc.domain.Pedido;
 import br.com.nucleos.cursomc.domain.Produto;
 import br.com.nucleos.cursomc.domain.enums.EstadoPagamento;
+import br.com.nucleos.cursomc.domain.enums.Perfil;
 import br.com.nucleos.cursomc.domain.enums.TipoCliente;
 import br.com.nucleos.cursomc.repositories.CategoriaRepository;
 import br.com.nucleos.cursomc.repositories.CidadeRepository;
@@ -130,13 +131,20 @@ public class DbService {
                         TipoCliente.PESSOAFISICA, pe.encode("123456"));
             cli1.getTelefones().addAll(Arrays.asList("27363326", "93838393"));
 
+            Cliente cli2 = new Cliente(null, "Ana Costa", "jcarlos_rlopes@hotmail.com", "15747867091",
+                        TipoCliente.PESSOAFISICA, pe.encode("123456"));
+            cli2.getTelefones().addAll(Arrays.asList("38745454", "84563215"));
+            cli2.addPerfil(Perfil.ADMIN);
+
             Endereco end1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", cli1, c1);
             Endereco end2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+            Endereco end3 = new Endereco(null, "Avenida Pontes Vieira", "1050", null, "Centro", "38777012", cli2, c2);
 
             cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
+            cli2.getEnderecos().addAll(Arrays.asList(end3));
 
-            clienteRepository.saveAll(Arrays.asList(cli1));
-            enderecoRepository.saveAll(Arrays.asList(end1, end2));
+            clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+            enderecoRepository.saveAll(Arrays.asList(end1, end2, end3));
 
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
